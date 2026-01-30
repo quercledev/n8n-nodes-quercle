@@ -27,7 +27,7 @@ export class Quercle implements INodeType {
 	description: INodeTypeDescription = {
 		displayName: "Quercle",
 		name: "quercle",
-		icon: "file:quercle.svg",
+		icon: "file:quercle.png",
 		group: ["transform"],
 		version: 1,
 		subtitle: '={{$parameter["operation"]}}',

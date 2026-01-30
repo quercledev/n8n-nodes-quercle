@@ -15,7 +15,7 @@
 	},
 	"scripts": {
 		"build": "tsc && bun run copy-assets",
-		"copy-assets": "cp nodes/Quercle/quercle.svg dist/nodes/Quercle/",
+		"copy-assets": "cp nodes/Quercle/quercle.png dist/nodes/Quercle/",
 		"typecheck": "tsc --noEmit",
 		"dev": "tsc --watch",
 		"test": "bun test",
