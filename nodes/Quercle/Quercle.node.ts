@@ -4,7 +4,7 @@ import type {
 	INodeType,
 	INodeTypeDescription,
 } from "n8n-workflow";
-import { NodeConnectionTypes, NodeOperationError } from "n8n-workflow";
+import { NodeOperationError } from "n8n-workflow";
 
 const BASE_URL = "https://api.quercle.dev";
 
@@ -35,8 +35,8 @@ export class Quercle implements INodeType {
 		defaults: {
 			name: "Quercle",
 		},
-		inputs: [NodeConnectionTypes.Main],
-		outputs: [NodeConnectionTypes.Main],
+		inputs: ["main"],
+		outputs: ["main"],
 		credentials: [
 			{
 				name: "quercleApi",
