@@ -1,0 +1,5 @@
+{
+	"entry": ["credentials/**/*.ts", "nodes/**/*.ts", "tests/**/*.ts"],
+	"project": ["credentials/**/*.ts", "nodes/**/*.ts", "tests/**/*.ts"],
+	"ignore": ["dist/**"]
+}
