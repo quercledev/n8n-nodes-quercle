@@ -31,7 +31,7 @@ describe("Quercle Node", () => {
 	});
 
 	it("should have an icon", () => {
-		expect(node.description.icon).toBe("file:quercle.svg");
+		expect(node.description.icon).toBe("file:quercle.png");
 	});
 
 	it("should have optional quercleApi credentials (env var fallback)", () => {
