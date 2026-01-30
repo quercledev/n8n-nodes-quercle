@@ -1,5 +1,6 @@
 import { describe, expect, it, setDefaultTimeout } from "bun:test";
-import { BASE_URL } from "@quercle/sdk";
+
+const BASE_URL = "https://api.quercle.dev";
 
 setDefaultTimeout(60000); // 60 seconds for API calls
 

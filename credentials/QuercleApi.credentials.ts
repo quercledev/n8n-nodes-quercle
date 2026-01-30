@@ -1,10 +1,11 @@
-import { BASE_URL } from "@quercle/sdk";
 import type {
 	IAuthenticateGeneric,
 	ICredentialTestRequest,
 	ICredentialType,
 	INodeProperties,
 } from "n8n-workflow";
+
+const BASE_URL = "https://api.quercle.dev";
 
 export class QuercleApi implements ICredentialType {
 	name = "quercleApi";

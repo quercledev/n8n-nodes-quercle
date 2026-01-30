@@ -1,4 +1,3 @@
-import { BASE_URL, FIELD_DESCRIPTIONS, TOOL_DESCRIPTIONS } from "@quercle/sdk";
 import type {
 	IExecuteFunctions,
 	INodeExecutionData,
@@ -6,6 +5,23 @@ import type {
 	INodeTypeDescription,
 } from "n8n-workflow";
 import { NodeConnectionTypes, NodeOperationError } from "n8n-workflow";
+
+const BASE_URL = "https://api.quercle.dev";
+
+const TOOL_DESCRIPTIONS = {
+	SEARCH:
+		"Search the web and get an AI-synthesized answer with citations. The response includes the answer and source URLs that can be fetched for further investigation. Optionally filter by allowed or blocked domains.",
+	FETCH:
+		"Fetch a web page and analyze its content using AI. Provide a URL and a prompt describing what information you want to extract or how to analyze the content. The raw HTML is NOT returned - only the AI's analysis based on your prompt.",
+};
+
+const FIELD_DESCRIPTIONS = {
+	SEARCH_QUERY: "The search query to find information about. Be specific",
+	FETCH_URL: "The URL to fetch and analyze",
+	FETCH_PROMPT:
+		"Instructions for how to analyze the page content. Be specific about what information you want to extract",
+	ALLOWED_DOMAINS: "Only include results from these domains (e.g., 'example.com, *.example.org')",
+};
 
 export class Quercle implements INodeType {
 	description: INodeTypeDescription = {
