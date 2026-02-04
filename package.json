@@ -1,6 +1,6 @@
 {
 	"name": "@quercle/n8n-nodes-quercle",
-	"version": "0.1.9",
+	"version": "0.1.10",
 	"description": "n8n nodes for Quercle AI-powered web search and fetch API",
 	"keywords": ["n8n-community-node-package", "n8n", "quercle", "web-search", "ai", "web-fetch"],
 	"license": "MIT",
