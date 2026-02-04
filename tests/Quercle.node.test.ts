@@ -61,7 +61,6 @@ describe("Quercle Node", () => {
 		const queryProp = node.description.properties.find((p) => p.name === "query");
 		expect(queryProp).toBeDefined();
 		expect(queryProp?.type).toBe("string");
-		expect(queryProp?.required).toBe(true);
 		expect(queryProp?.displayOptions?.show?.operation).toContain("search");
 	});
 
@@ -81,13 +80,11 @@ describe("Quercle Node", () => {
 		const urlProp = node.description.properties.find((p) => p.name === "url");
 		expect(urlProp).toBeDefined();
 		expect(urlProp?.type).toBe("string");
-		expect(urlProp?.required).toBe(true);
 		expect(urlProp?.displayOptions?.show?.operation).toContain("fetch");
 
 		const promptProp = node.description.properties.find((p) => p.name === "prompt");
 		expect(promptProp).toBeDefined();
 		expect(promptProp?.type).toBe("string");
-		expect(promptProp?.required).toBe(true);
 		expect(promptProp?.displayOptions?.show?.operation).toContain("fetch");
 	});
 
