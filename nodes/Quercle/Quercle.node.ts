@@ -1,3 +1,4 @@
+import { FIELD_DESCRIPTIONS, QuercleClient, TOOL_DESCRIPTIONS } from "@quercle/sdk";
 import type {
 	IExecuteFunctions,
 	INodeExecutionData,
@@ -5,7 +6,6 @@ import type {
 	INodeTypeDescription,
 } from "n8n-workflow";
 import { NodeOperationError } from "n8n-workflow";
-import { QuercleClient, FIELD_DESCRIPTIONS, TOOL_DESCRIPTIONS } from "@quercle/sdk";
 
 export class Quercle implements INodeType {
 	description: INodeTypeDescription = {
