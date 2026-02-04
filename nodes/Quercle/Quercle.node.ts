@@ -55,6 +55,7 @@ export class Quercle implements INodeType {
 				displayName: "Query",
 				name: "query",
 				type: "string",
+				required: true,
 				displayOptions: {
 					show: {
 						operation: ["search"],
@@ -99,6 +100,7 @@ export class Quercle implements INodeType {
 				displayName: "URL",
 				name: "url",
 				type: "string",
+				required: true,
 				displayOptions: {
 					show: {
 						operation: ["fetch"],
@@ -112,6 +114,7 @@ export class Quercle implements INodeType {
 				displayName: "Prompt",
 				name: "prompt",
 				type: "string",
+				required: true,
 				displayOptions: {
 					show: {
 						operation: ["fetch"],
