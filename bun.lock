@@ -5,7 +5,7 @@
     "": {
       "name": "@quercle/n8n-nodes-quercle",
       "dependencies": {
-        "@quercle/sdk": "^0.2.6",
+        "@quercle/sdk": "^1.0.0",
       },
       "devDependencies": {
         "@biomejs/biome": "^1.9.4",
@@ -99,7 +99,7 @@
 
     "@oxc-resolver/binding-win32-x64-msvc": ["@oxc-resolver/binding-win32-x64-msvc@11.17.0", "", { "os": "win32", "cpu": "x64" }, "sha512-pX6s2kMXLQg+hlqKk5UqOW09iLLxnTkvn8ohpYp2Mhsm2yzDPCx9dyOHiB/CQixLzTkLQgWWJykN4Z3UfRKW4Q=="],
 
-    "@quercle/sdk": ["@quercle/sdk@0.2.6", "", { "dependencies": { "zod": "^3.24.1" } }, "sha512-+GN7dNB7mT3oYnjo6rMygo7sRan1J4DZ4IydYgY8GxTnFrl4p5y2QXAtOLjHDzmtFhygKw/DT6uoQEMnOqrTsg=="],
+    "@quercle/sdk": ["@quercle/sdk@1.0.5", "", {}, "sha512-E1ggL+PP6fmPZ5JJhRm62gedZBkUTB2dO783EKWE6oCFed5sNMIENxFlgAVz9Dlq91y+x7O8331g5KwPSiNCww=="],
 
     "@tybys/wasm-util": ["@tybys/wasm-util@0.10.1", "", { "dependencies": { "tslib": "^2.4.0" } }, "sha512-9tTaPJLSiejZKx+Bmog4uSubteqTvFrVrURwkmHixBo0G4seD0zUxp98E1DzUBJxLQ3NPwXrGKDiVjwx/DpPsg=="],
 
@@ -334,8 +334,6 @@
     "yargs-parser": ["yargs-parser@21.1.1", "", {}, "sha512-tVpsJW7DdjecAiFpbIB1e3qxIQsE6NoPc5/eTdrbbIC4h0LVsWhnoa3g+m2HclBIujHzsxZ4VJVA+GUuc2/LBw=="],
 
     "zod": ["zod@4.3.6", "", {}, "sha512-rftlrkhHZOcjDwkGlnUtZZkvaPHCsDATp4pGpuOOMDaTdDDXF91wuVDJoWoPsKX/3YPQ5fHuF3STjcYyKr+Qhg=="],
-
-    "@quercle/sdk/zod": ["zod@3.25.67", "", {}, "sha512-idA2YXwpCdqUSKRCACDE6ItZD9TZzy3OZMtpfLoh6oPR47lipysRrJfjzMqFxQ3uJuUPyUeWe1r9vLH33xO/Qw=="],
 
     "micromatch/picomatch": ["picomatch@2.3.1", "", {}, "sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA=="],
 

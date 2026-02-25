@@ -1,6 +1,6 @@
 {
 	"name": "@quercle/n8n-nodes-quercle",
-	"version": "0.1.12",
+	"version": "1.0.0",
 	"description": "n8n nodes for Quercle AI-powered web search and fetch API",
 	"keywords": ["n8n-community-node-package", "n8n", "quercle", "web-search", "ai", "web-fetch"],
 	"license": "MIT",
@@ -32,7 +32,7 @@
 		"nodes": ["dist/nodes/Quercle/Quercle.node.js"]
 	},
 	"dependencies": {
-		"@quercle/sdk": "^0.2.6"
+		"@quercle/sdk": "^1.0.0"
 	},
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
@@ -44,5 +44,8 @@
 	},
 	"peerDependencies": {
 		"n8n-workflow": "*"
+	},
+	"publishConfig": {
+		"access": "public"
 	}
 }

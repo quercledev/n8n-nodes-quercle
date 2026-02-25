@@ -1,187 +1,169 @@
-# @quercle/n8n-nodes-quercle
+# @quercle/n8n
 
-AI-powered web search and fetch nodes for [n8n](https://n8n.io).
+AI-powered web search, fetch, and extraction node for [n8n](https://n8n.io).
 
-## Features
+## Install
 
-- **Search**: Perform AI-powered web searches with optional domain filtering
-- **Fetch**: Fetch and process web content with custom AI instructions
+1. Go to **Settings > Community Nodes** in your n8n instance
+2. Enter `@quercle/n8n-nodes-quercle`
+3. Agree to the risks and install
 
-## Installation
-
-### Community Nodes (Recommended)
-
-1. Go to **Settings > Community Nodes**
-2. Select **Install**
-3. Enter `@quercle/n8n-nodes-quercle`
-4. Agree to the risks and select **Install**
-
-### Manual Installation
+Alternatively, install manually:
 
 ```bash
 cd ~/.n8n/nodes
 npm install @quercle/n8n-nodes-quercle
 ```
 
-Then restart n8n.
+Restart n8n after manual installation.
 
-## Authentication
+## Setup
 
-You can provide your API key in two ways:
+### Credentials
 
-### Option 1: Environment Variable (Recommended for self-hosted)
+1. Get an API key from [quercle.dev](https://quercle.dev) (starts with `qk_`)
+2. In n8n, go to **Credentials > New Credential**
+3. Search for **Quercle API**
+4. Paste your API key and save
 
-Set the `QUERCLE_API_KEY` environment variable:
+### Environment Variable
+
+For self-hosted n8n, you can set the API key as an environment variable instead:
 
 ```bash
 export QUERCLE_API_KEY=qk_your_api_key_here
 ```
 
-### Option 2: n8n Credentials
-
-1. Get your API key from [Quercle Dashboard](https://quercle.dev)
-2. In n8n, go to **Credentials** and create new credentials
-3. Search for **Quercle API**
-4. Enter your API key (starts with `qk_`)
-
-**Note:** If both are configured, the n8n credential takes precedence.
+If both a credential and the environment variable are configured, the credential takes precedence.
 
 ## Operations
 
 ### Search
 
-Perform AI-powered web search that returns synthesized answers with source citations.
+AI-synthesized web search. Returns a natural-language answer with source citations.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | Query | string | Yes | The search query |
-| Domain Filter | options | No | Filter by allowed or blocked domains |
-| Domains | string | No | Comma-separated list of domains (when filter is set) |
-
-**Example Use Cases:**
-- Research competitors and market trends
-- Find documentation and technical answers
-- Gather news and updates on specific topics
+| Domain Filter | options | No | `None`, `Allowed Domains`, or `Blocked Domains` |
+| Domains | string | No | Comma-separated list of domains (shown when a filter is selected) |
 
 ### Fetch
 
-Fetch content from a URL and process it with custom AI instructions.
+Fetch a URL and analyze its content with an AI prompt. Returns a processed result based on your instructions.
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | URL | string | Yes | The URL to fetch |
-| Prompt | string | Yes | Instructions for processing the content |
+| Prompt | string | Yes | Instructions for how to process the page content |
 
-**Example Use Cases:**
-- Extract structured data from web pages
-- Summarize articles and documentation
-- Monitor pricing or product information
+### Raw Search
 
-## Workflow Examples
+Raw web search results without AI synthesis. Returns search results directly in your chosen format.
 
-### Example 1: Research Pipeline
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| Query | string | Yes | The search query |
+| Format | options | No | `Markdown` (default) or `JSON` |
+| Use Safeguard | boolean | No | Enable content safety filtering (default: off) |
 
-Create a workflow that researches a topic and sends a summary:
+### Raw Fetch
 
-1. **Manual Trigger** - Start the workflow
-2. **Quercle (Search)** - Search for "latest AI developments 2025"
-3. **Send Email** - Send the search results
+Fetch raw page content from a URL without AI processing.
 
-### Example 2: Content Monitoring
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| URL | string | Yes | The URL to fetch |
+| Format | options | No | `Markdown` (default) or `HTML` |
+| Use Safeguard | boolean | No | Enable content safety filtering (default: off) |
 
-Monitor a webpage for changes and extract key information:
+### Extract
 
-1. **Schedule Trigger** - Run every hour
-2. **Quercle (Fetch)** - Fetch URL with prompt "Extract the main headline and any price changes"
-3. **IF** - Check if content changed
-4. **Slack** - Send notification
+Extract relevant content from a URL based on a query. Returns only the parts of the page that match your query.
 
-### Example 3: Multi-Source Research
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| URL | string | Yes | The URL to extract from |
+| Query | string | Yes | What content to extract from the page |
+| Format | options | No | `Markdown` (default) or `JSON` |
+| Use Safeguard | boolean | No | Enable content safety filtering (default: off) |
 
-Research from multiple sources with domain filtering:
+## Usage
 
-1. **Manual Trigger**
-2. **Quercle (Search)** - Query with allowed domains: `github.com, stackoverflow.com`
-3. **Quercle (Search)** - Query with allowed domains: `docs.python.org, pypi.org`
-4. **Merge** - Combine results
-5. **OpenAI** - Synthesize findings
+All operations return a `result` field. Operations with the safeguard option also return an `unsafe` field indicating whether the content was flagged.
 
-### Example 4: Web Scraping Pipeline
+### Using Search in a workflow
 
-Extract and process data from multiple pages:
-
-1. **Spreadsheet** - List of URLs to process
-2. **Loop Over Items**
-3. **Quercle (Fetch)** - Process each URL with extraction prompt
-4. **Google Sheets** - Save extracted data
-
-## Node Configuration
-
-### Search Node
+1. Add a **Quercle** node
+2. Set Operation to **Search**
+3. Enter a query, optionally restrict to specific domains
+4. The output `result` contains the AI-generated answer with citations
 
 ```
 Operation: Search
 Query: {{ $json.searchTerm }}
 Domain Filter: Allowed Domains
-Domains: example.com, docs.example.com
+Domains: github.com, stackoverflow.com
 ```
 
-### Fetch Node
+### Using Fetch in a workflow
+
+1. Add a **Quercle** node
+2. Set Operation to **Fetch**
+3. Provide a URL and a prompt describing what to extract or summarize
 
 ```
 Operation: Fetch
 URL: {{ $json.url }}
-Prompt: Extract the product name, price, and availability status. Return as JSON.
+Prompt: Extract the product name, price, and availability. Return as JSON.
 ```
 
-## Working with Expressions
+### Using Raw Search for structured data
 
-Use n8n expressions to make your queries dynamic:
+Choose **Raw Search** with JSON format when you need machine-readable search results for downstream processing.
 
-**Dynamic Search Query:**
 ```
-Query: latest news about {{ $json.company }} {{ $json.topic }}
-```
-
-**Dynamic URL:**
-```
-URL: https://example.com/products/{{ $json.productId }}
+Operation: Raw Search
+Query: {{ $json.topic }}
+Format: JSON
 ```
 
-**Dynamic Prompt:**
+### Using Raw Fetch for full page content
+
+Choose **Raw Fetch** when you need the complete page content (e.g., to feed into another AI node).
+
 ```
-Prompt: Extract {{ $json.fields.join(', ') }} from this page
+Operation: Raw Fetch
+URL: {{ $json.url }}
+Format: Markdown
 ```
 
-## Error Handling
+### Using Extract for targeted content
 
-The node supports n8n's "Continue on Fail" option. When enabled:
-- Failed items return `{ "error": "error message" }` instead of stopping the workflow
-- Other items continue processing normally
+Choose **Extract** when you only need specific information from a page.
 
-Common errors:
-- **401**: Invalid API key - check your credentials
-- **402**: Insufficient credits - add credits at quercle.dev
-- **403**: Inactive account - contact support
-- **504**: Request timeout - the page may be slow to respond
+```
+Operation: Extract
+URL: https://example.com/pricing
+Query: pricing tiers and feature comparison
+Format: JSON
+```
 
-## Best Practices
+### Using as an AI Agent tool
 
-1. **Use Domain Filters** - When searching for specific sources, use allowed domains to get more relevant results
-2. **Be Specific in Prompts** - Clear instructions in fetch prompts produce better results
-3. **Handle Errors** - Enable "Continue on Fail" for batch processing
-4. **Cache Results** - For repeated queries, consider caching with n8n's built-in caching
+The Quercle node has `usableAsTool` enabled, so you can attach it directly to an n8n AI Agent node. The agent can then call Search, Fetch, or any other operation as part of its reasoning loop.
 
-## Requirements
+## Troubleshooting
 
-- n8n >= 1.0.0
-- Quercle API key ([get one here](https://quercle.dev))
+| Error | Cause | Fix |
+|-------|-------|-----|
+| **No API key provided** | Neither credential nor env var is set | Add a Quercle API credential or set `QUERCLE_API_KEY` |
+| **401 Unauthorized** | Invalid API key | Verify your key at [quercle.dev](https://quercle.dev) |
+| **402 Payment Required** | Insufficient credits | Add credits at [quercle.dev](https://quercle.dev) |
+| **403 Forbidden** | Inactive account | Contact support@quercle.dev |
+| **504 Gateway Timeout** | Target page is slow to respond | Retry, or try a different URL |
 
-## Resources
-
-- [Quercle Documentation](https://quercle.dev/docs)
-- [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
-- [n8n Expressions](https://docs.n8n.io/code/expressions/)
+Enable **Continue on Fail** in the node settings to prevent a single failed item from stopping the entire workflow. Failed items return `{ "error": "error message" }` instead of throwing.
 
 ## License
 
