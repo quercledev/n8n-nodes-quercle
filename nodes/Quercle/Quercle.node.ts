@@ -1,4 +1,4 @@
-import { FIELD_DESCRIPTIONS, QuercleClient, TOOL_DESCRIPTIONS } from "@quercle/sdk";
+import { QuercleClient, toolMetadata } from "@quercle/sdk";
 import type {
 	IExecuteFunctions,
 	INodeExecutionData,
@@ -38,14 +38,32 @@ export class Quercle implements INodeType {
 					{
 						name: "Search",
 						value: "search",
-						description: TOOL_DESCRIPTIONS.SEARCH,
+						description: toolMetadata.search.description,
 						action: "Perform AI powered web search",
 					},
 					{
 						name: "Fetch",
 						value: "fetch",
-						description: TOOL_DESCRIPTIONS.FETCH,
+						description: toolMetadata.fetch.description,
 						action: "Fetch and process content from a URL",
+					},
+					{
+						name: "Raw Search",
+						value: "rawSearch",
+						description: toolMetadata.rawSearch.description,
+						action: "Run raw web search",
+					},
+					{
+						name: "Raw Fetch",
+						value: "rawFetch",
+						description: toolMetadata.rawFetch.description,
+						action: "Fetch raw content from a URL",
+					},
+					{
+						name: "Extract",
+						value: "extract",
+						description: toolMetadata.extract.description,
+						action: "Extract relevant content from a URL",
 					},
 				],
 				default: "search",
@@ -62,7 +80,7 @@ export class Quercle implements INodeType {
 					},
 				},
 				default: "",
-				description: FIELD_DESCRIPTIONS.SEARCH_QUERY,
+				description: toolMetadata.search.parameters.query,
 			},
 			{
 				displayName: "Domain Filter",
@@ -92,7 +110,7 @@ export class Quercle implements INodeType {
 					},
 				},
 				default: "",
-				description: FIELD_DESCRIPTIONS.ALLOWED_DOMAINS,
+				description: toolMetadata.search.parameters.allowed_domains,
 				placeholder: "example.com, another.com",
 			},
 			// Fetch operation fields
@@ -107,7 +125,7 @@ export class Quercle implements INodeType {
 					},
 				},
 				default: "",
-				description: FIELD_DESCRIPTIONS.FETCH_URL,
+				description: toolMetadata.fetch.parameters.url,
 				placeholder: "https://example.com/page",
 			},
 			{
@@ -121,11 +139,152 @@ export class Quercle implements INodeType {
 					},
 				},
 				default: "",
-				description: FIELD_DESCRIPTIONS.FETCH_PROMPT,
+				description: toolMetadata.fetch.parameters.prompt,
 				typeOptions: {
 					rows: 4,
 				},
 				placeholder: "Extract the main article content and summarize it",
+			},
+			// Raw Search operation fields
+			{
+				displayName: "Query",
+				name: "query",
+				type: "string",
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ["rawSearch"],
+					},
+				},
+				default: "",
+				description: toolMetadata.rawSearch.parameters.query,
+			},
+			{
+				displayName: "Format",
+				name: "format",
+				type: "options",
+				displayOptions: {
+					show: {
+						operation: ["rawSearch"],
+					},
+				},
+				options: [
+					{ name: "Markdown", value: "markdown" },
+					{ name: "JSON", value: "json" },
+				],
+				default: "markdown",
+				description: toolMetadata.rawSearch.parameters.format,
+			},
+			{
+				displayName: "Use Safeguard",
+				name: "useSafeguard",
+				type: "boolean",
+				displayOptions: {
+					show: {
+						operation: ["rawSearch"],
+					},
+				},
+				default: false,
+				description: toolMetadata.rawSearch.parameters.use_safeguard,
+			},
+			// Raw Fetch operation fields
+			{
+				displayName: "URL",
+				name: "url",
+				type: "string",
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ["rawFetch"],
+					},
+				},
+				default: "",
+				description: toolMetadata.rawFetch.parameters.url,
+				placeholder: "https://example.com/page",
+			},
+			{
+				displayName: "Format",
+				name: "format",
+				type: "options",
+				displayOptions: {
+					show: {
+						operation: ["rawFetch"],
+					},
+				},
+				options: [
+					{ name: "Markdown", value: "markdown" },
+					{ name: "HTML", value: "html" },
+				],
+				default: "markdown",
+				description: toolMetadata.rawFetch.parameters.format,
+			},
+			{
+				displayName: "Use Safeguard",
+				name: "useSafeguard",
+				type: "boolean",
+				displayOptions: {
+					show: {
+						operation: ["rawFetch"],
+					},
+				},
+				default: false,
+				description: toolMetadata.rawFetch.parameters.use_safeguard,
+			},
+			// Extract operation fields
+			{
+				displayName: "URL",
+				name: "url",
+				type: "string",
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ["extract"],
+					},
+				},
+				default: "",
+				description: toolMetadata.extract.parameters.url,
+				placeholder: "https://example.com/page",
+			},
+			{
+				displayName: "Query",
+				name: "query",
+				type: "string",
+				required: true,
+				displayOptions: {
+					show: {
+						operation: ["extract"],
+					},
+				},
+				default: "",
+				description: toolMetadata.extract.parameters.query,
+			},
+			{
+				displayName: "Format",
+				name: "format",
+				type: "options",
+				displayOptions: {
+					show: {
+						operation: ["extract"],
+					},
+				},
+				options: [
+					{ name: "Markdown", value: "markdown" },
+					{ name: "JSON", value: "json" },
+				],
+				default: "markdown",
+				description: toolMetadata.extract.parameters.format,
+			},
+			{
+				displayName: "Use Safeguard",
+				name: "useSafeguard",
+				type: "boolean",
+				displayOptions: {
+					show: {
+						operation: ["extract"],
+					},
+				},
+				default: false,
+				description: toolMetadata.extract.parameters.use_safeguard,
 			},
 		],
 	};
@@ -160,6 +319,7 @@ export class Quercle implements INodeType {
 			try {
 				const operation = this.getNodeParameter("operation", i) as string;
 				let result: string;
+				let unsafe: boolean | undefined;
 
 				if (operation === "search") {
 					const query = this.getNodeParameter("query", i) as string;
@@ -180,18 +340,45 @@ export class Quercle implements INodeType {
 						}
 					}
 
-					result = await client.search(query, options);
+					result = (await client.search(query, options)).result;
 				} else if (operation === "fetch") {
 					const url = this.getNodeParameter("url", i) as string;
 					const prompt = this.getNodeParameter("prompt", i) as string;
 
-					result = await client.fetch(url, prompt);
+					result = (await client.fetch(url, prompt)).result;
+				} else if (operation === "rawSearch") {
+					const query = this.getNodeParameter("query", i) as string;
+					const format = this.getNodeParameter("format", i) as "markdown" | "json";
+					const useSafeguard = this.getNodeParameter("useSafeguard", i) as boolean;
+
+					const response = await client.rawSearch(query, { format, useSafeguard });
+					result =
+						typeof response.result === "string" ? response.result : JSON.stringify(response.result);
+					unsafe = response.unsafe;
+				} else if (operation === "rawFetch") {
+					const url = this.getNodeParameter("url", i) as string;
+					const format = this.getNodeParameter("format", i) as "markdown" | "html";
+					const useSafeguard = this.getNodeParameter("useSafeguard", i) as boolean;
+
+					const response = await client.rawFetch(url, { format, useSafeguard });
+					result = response.result;
+					unsafe = response.unsafe;
+				} else if (operation === "extract") {
+					const url = this.getNodeParameter("url", i) as string;
+					const query = this.getNodeParameter("query", i) as string;
+					const format = this.getNodeParameter("format", i) as "markdown" | "json";
+					const useSafeguard = this.getNodeParameter("useSafeguard", i) as boolean;
+
+					const response = await client.extract(url, query, { format, useSafeguard });
+					result =
+						typeof response.result === "string" ? response.result : JSON.stringify(response.result);
+					unsafe = response.unsafe;
 				} else {
 					throw new NodeOperationError(this.getNode(), `Unknown operation: ${operation}`);
 				}
 
 				returnData.push({
-					json: { result },
+					json: { result, unsafe },
 					pairedItem: { item: i },
 				});
 			} catch (error) {

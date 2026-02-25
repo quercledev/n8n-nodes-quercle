@@ -1,5 +1,5 @@
 import { describe, expect, it } from "bun:test";
-import { BASE_URL, FIELD_DESCRIPTIONS, TOOL_DESCRIPTIONS } from "@quercle/sdk";
+import { toolMetadata } from "@quercle/sdk";
 import { QuercleApi } from "../credentials/QuercleApi.credentials";
 import { Quercle } from "../nodes/Quercle/Quercle.node";
 
@@ -26,11 +26,11 @@ describe("Quercle Node", () => {
 		expect(credentials?.[0].required).toBe(false);
 	});
 
-	it("should define search and fetch operations", () => {
+	it("should define all five operations", () => {
 		const operationProp = node.description.properties.find((p) => p.name === "operation");
 		expect(operationProp).toBeDefined();
 		expect(operationProp?.type).toBe("options");
-		expect(operationProp?.options).toHaveLength(2);
+		expect(operationProp?.options).toHaveLength(5);
 
 		const options = operationProp?.options as Array<{
 			name: string;
@@ -38,23 +38,29 @@ describe("Quercle Node", () => {
 			description: string;
 		}>;
 		expect(options[0].value).toBe("search");
-		expect(options[0].description).toBe(TOOL_DESCRIPTIONS.SEARCH);
+		expect(options[0].description).toBe(toolMetadata.search.description);
 		expect(options[1].value).toBe("fetch");
-		expect(options[1].description).toBe(TOOL_DESCRIPTIONS.FETCH);
+		expect(options[1].description).toBe(toolMetadata.fetch.description);
+		expect(options[2].value).toBe("rawSearch");
+		expect(options[2].description).toBe(toolMetadata.rawSearch.description);
+		expect(options[3].value).toBe("rawFetch");
+		expect(options[3].description).toBe(toolMetadata.rawFetch.description);
+		expect(options[4].value).toBe("extract");
+		expect(options[4].description).toBe(toolMetadata.extract.description);
 	});
 
 	it("should use correct field descriptions", () => {
 		const queryProp = node.description.properties.find((p) => p.name === "query");
-		expect(queryProp?.description).toBe(FIELD_DESCRIPTIONS.SEARCH_QUERY);
+		expect(queryProp?.description).toBe(toolMetadata.search.parameters.query);
 
 		const urlProp = node.description.properties.find((p) => p.name === "url");
-		expect(urlProp?.description).toBe(FIELD_DESCRIPTIONS.FETCH_URL);
+		expect(urlProp?.description).toBe(toolMetadata.fetch.parameters.url);
 
 		const promptProp = node.description.properties.find((p) => p.name === "prompt");
-		expect(promptProp?.description).toBe(FIELD_DESCRIPTIONS.FETCH_PROMPT);
+		expect(promptProp?.description).toBe(toolMetadata.fetch.parameters.prompt);
 
 		const domainsProp = node.description.properties.find((p) => p.name === "domains");
-		expect(domainsProp?.description).toBe(FIELD_DESCRIPTIONS.ALLOWED_DOMAINS);
+		expect(domainsProp?.description).toBe(toolMetadata.search.parameters.allowed_domains);
 	});
 
 	it("should have query field for search operation", () => {
@@ -122,15 +128,5 @@ describe("QuercleApi Credentials", () => {
 	it("should have authentication configured", () => {
 		expect(credentials.authenticate).toBeDefined();
 		expect(credentials.authenticate.type).toBe("generic");
-	});
-
-	it("should use correct BASE_URL", () => {
-		expect(credentials.test.request.baseURL).toBe(BASE_URL);
-	});
-
-	it("should have credential test configured", () => {
-		expect(credentials.test).toBeDefined();
-		expect(credentials.test.request.url).toBe("/v1/search");
-		expect(credentials.test.request.method).toBe("POST");
 	});
 });

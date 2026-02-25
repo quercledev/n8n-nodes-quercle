@@ -1,11 +1,4 @@
-import type {
-	IAuthenticateGeneric,
-	ICredentialTestRequest,
-	ICredentialType,
-	INodeProperties,
-} from "n8n-workflow";
-
-const BASE_URL = "https://api.quercle.dev";
+import type { IAuthenticateGeneric, ICredentialType, INodeProperties } from "n8n-workflow";
 
 export class QuercleApi implements ICredentialType {
 	name = "quercleApi";
@@ -29,17 +22,6 @@ export class QuercleApi implements ICredentialType {
 		properties: {
 			headers: {
 				Authorization: "=Bearer {{$credentials.apiKey}}",
-			},
-		},
-	};
-
-	test: ICredentialTestRequest = {
-		request: {
-			baseURL: BASE_URL,
-			url: "/v1/search",
-			method: "POST",
-			body: {
-				query: "test",
 			},
 		},
 	};
